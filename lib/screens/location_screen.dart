@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../utilities/constants.dart';
 
 class LocationScreen extends StatefulWidget {
-  const LocationScreen({super.key});
+  final dynamic locationWeather;
+
+  const LocationScreen({this.locationWeather, super.key});
 
   @override
   State<LocationScreen> createState() => _LocationScreenState();
