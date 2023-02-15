@@ -9,8 +9,13 @@ class WeatherModel {
     Location location = Location();
     await location.getCurrentLocation();
     NetworkHelper networkHelper = NetworkHelper(
-        '$kOpenWeatherMapUrl?lat=${location.latitude}&lon=${location
-            .longitude}&appid=$kApiKey&units=metric');
+        '$kOpenWeatherMapUrl?lat=${location.latitude}&lon=${location.longitude}&appid=$kApiKey&units=metric');
+    return await networkHelper.getData();
+  }
+
+  Future<dynamic> getCityWeather(String cityName) async {
+    NetworkHelper networkHelper = NetworkHelper(
+        '$kOpenWeatherMapUrl?q=$cityName&appid=$kApiKey&units=metric');
     return await networkHelper.getData();
   }
 
@@ -46,4 +51,3 @@ class WeatherModel {
     }
   }
 }
-

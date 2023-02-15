@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../utilities/constants.dart';
 import '../services/weather.dart';
+import './city_screen.dart';
 
 class LocationScreen extends StatefulWidget {
   final dynamic locationWeather;
@@ -13,7 +14,6 @@ class LocationScreen extends StatefulWidget {
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-
   late int temperature;
   late String weatherIcon;
   late String cityName;
@@ -58,53 +58,70 @@ class _LocationScreenState extends State<LocationScreen> {
         ),
         constraints: const BoxConstraints.expand(),
         child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.near_me,
-                      size: 50.0,
+          child: Container(
+            margin: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.near_me,
+                        size: 50.0,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.location_city,
-                      size: 50.0,
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Row(
-                  children: const <Widget>[
-                    Text(
-                      '32°',
-                      style: kTempTextStyle,
-                    ),
-                    Text(
-                      '☀️',
-                      style: kConditionTextStyle,
+                    IconButton(
+                      onPressed: () async {
+                        var typedName = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (builder) {
+                              return const CityScreen();
+                            },
+                          ),
+                        );
+                        if (typedName != null) {
+                          var weatherData =
+                              await weatherModel.getCityWeather(typedName);
+                          updateUI(weatherData);
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.location_city,
+                        size: 50.0,
+                      ),
                     ),
                   ],
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: Text(
-                  "It's 🍦 time in San Francisco!",
-                  textAlign: TextAlign.right,
-                  style: kMessageTextStyle,
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        '$temperature°',
+                        style: kTempTextStyle,
+                      ),
+                      Text(
+                        weatherIcon,
+                        style: kConditionTextStyle,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 15.0),
+                  child: Text(
+                    "$descriptionTemp in $cityName!",
+                    textAlign: TextAlign.right,
+                    style: kMessageTextStyle,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
